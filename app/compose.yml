@@ -1,7 +1,7 @@
 version: '3.0'
 
 services:
-  cos:
+  service:
     container_name: ${CONTAINER_NAME}
     hostname: ${CONTAINER_NAME}
     build:

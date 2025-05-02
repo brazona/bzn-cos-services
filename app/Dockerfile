@@ -4,7 +4,7 @@ FROM maven:3.9.9-amazoncorretto-8 AS build
 LABEL maintainer=Brazona\ Cézar
 VOLUME /tmp
 
-ARG ARG_SPRING_ACTIVE_PROFILE=compose
+ARG ARG_SPRING_ACTIVE_PROFILE
 ARG ARG_APPLICATION_NAME
 ARG ARG_GITHUB_TOKEN
 ARG ARG_GITHUB_USER
@@ -35,7 +35,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Compila a aplicação
-RUN mvn clean install -P $SPRING_ACTIVE_PROFILE
+RUN mvn clean install
 
 # Etapa 2: Criar a imagem final para execução
 FROM openjdk:24-slim

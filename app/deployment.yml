@@ -1,0 +1,118 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conf-service
+  namespace: ${NAMESPACE}
+  labels:
+    app: conf-service
+spec:
+  selector:
+    matchLabels:
+      app: conf-service
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: conf-service
+    spec:
+      restartPolicy: Always
+      securityContext:
+        runAsUser: 0
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
+      containers:
+      - name: conf-service-service
+        image: ${IMAGE}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8888
+          protocol: TCP
+        env:
+          - name: SPRING_ACTIVE_PROFILE
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: SPRING_ACTIVE_PROFILE
+          
+          - name: GITHUB_TOKEN
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: GITHUB_TOKEN  
+
+          - name: GITHUB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: GITHUB_USER   
+          - name: CONFIG_SERVER_USER
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: CONFIG_SERVER_USER
+          - name: CONFIG_SERVER_PASS
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: CONFIG_SERVER_PASS
+
+          - name: CONFIG_SERVER_ENCRYPT_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: CONFIG_SERVER_ENCRYPT_KEY
+
+          - name: GITHUB_BRANCH
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: GITHUB_BRANCH
+
+          - name: GITHUB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: conf-service-service           
+                key: GITHUB_URL     
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: conf-service-service
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    app: conf-service
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: ${NAMESPACE}
+  name: conf-service-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ${DNS}
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: conf-service-service
+              port:
+                number: 8888

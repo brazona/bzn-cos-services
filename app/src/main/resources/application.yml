@@ -52,3 +52,45 @@ management:
 springdoc:
   api-docs:
     path: /api-docs
+
+---
+name: compose
+environment: compose
+spring:
+  config:
+    activate:
+      on-profile: compose
+  cloud:
+    config:
+      server:
+        encrypt:
+          enabled: false
+        git:
+          password: ${GITHUB_TOKEN}
+          username: ${GITHUB_USER}
+          strictHostKeyChecking: 'false'
+          ignore-local-ssh-settings: 'true'
+          uri: ${GITHUB_URL}
+          clone-on-start: true
+          default-label: ${GITHUB_BRANCH}
+          search-paths: 'profiles/{application}/compose'
+encrypt:
+  key: ${CONFIG_SERVER_ENCRYPT_KEY}
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        cloud:
+          config: DEBUG
+          git: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+      probes:
+        enabled: true
+springdoc:
+  api-docs:
+    path: /api-docs    

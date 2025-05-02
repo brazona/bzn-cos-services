@@ -34,11 +34,8 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# let's use the value
-RUN echo "Oh dang look at that $SPRING_ACTIVE_PROFILE"
-
 # Compila a aplicação
-RUN mvn clean install -P "$SPRING_ACTIVE_PROFILE"
+RUN mvn clean install
 
 # Etapa 2: Criar a imagem final para execução
 FROM openjdk:24-slim

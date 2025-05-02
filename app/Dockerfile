@@ -35,7 +35,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Compila a aplicação
-RUN mvn clean install
+RUN mvn clean install -P $SPRING_ACTIVE_PROFILE
 
 # Etapa 2: Criar a imagem final para execução
 FROM openjdk:24-slim

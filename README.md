@@ -2,13 +2,37 @@
 
 __[descrição do repositório: ]__ Esse aplicativo tem a função de centralizar o fornecimento de informações de configuração das aplicações, possibilitando classificar os arquivos em perfils, assim entregando as configurações especifica de cada ambiente.
 
-## Versões
+## Identificadores da Aplicação
+
+| Sigla | Descrição do Projeto | Nome Aplicativo |
+| --- | --- | --- |
+| COS | Serviço de configurações das aplicações | bzn-cos-services |
 
 __[relação das versões de aplicativos externos: ]__ A aplicação utiliza as seguintes versões:
 
 | Software | Versão |
 | --- | --- |
-| JDK | 11.0.12 |
+| JDK | 24.0.1 |
+| Maven | 3.6.3 |
+| Intellij | 2024.1.3 (Community Edition) |
+| Vscode | 1.99.3 |
+| Docker | 27.5.1 |
+| Docker Compose | v2.32.4 |
+| Git | 2.45.1 |
+| Windows | 10 |
+
+## Deploy da Aplicação
+
+__[descrição do processo de deploy em ambiente cloud: ]__ *NÃO SE APLICA*
+
+### Tabela Branch x Ambiente
+
+| Branch | Ambiente |
+| --- | --- |
+| develop | Aplica no ambiente __DSV__ |
+| release/** | Aplica no ambiente __HMG__ |
+| pre-release/** | Aplica no ambiente __STG__ |
+| main | Aplica no ambiente __PRD__ |
 
 ## Estrutura do projeto
 
@@ -18,67 +42,58 @@ __[descrição da estrutura do diretório: ]__
 
 ├── .github
 │   └── workflows
+│       └── bzn-cos-services.yml
 │       └── script
 │           └── manifest.sh
-│       └── pipeline-build-deploy.yml
-│   └── branch_default_rule.json
-│   └── dependabot.yml
-│   └── tag_default_rule.json
+│    └── branch_ruleset.yml
+│    └── dependabot.yml
 ├── app
 │   └── src
-│   └── deployment.yml
-│   └── docker-compose.yml
-│   └── Dockerfile
+│       └── java
+│       └── resources
+│   └── .gitignore
+│   └── compose.yml
+│   └── deployment.yml
+│   └── Dockerfile
+│   └── pom.xml
 ├── docs
 │   └── CONTRIBUTING.md
 │   └── CODE_OF_CONDUCT.md
 │   └── PULL_REQUEST_TEMPLATE.md
+│   └── SECURITY.md
+└── .gitignore
 └── README.md
 ```
 
-## Deploy da Aplicação
-
-__[descrição do processo de deploy em ambiente cloud: ]__ O fluxo de trabalho são processos definidos para dar direção a etapa de desenvolvimento , homologação e lançamento.
-
-As alterações são aplicadas em determinado ambiente através das **branchs**, ao publicar uma alteração numa das branchs ***principais*** o pipeline executa a atualização, a tabela abaixo descreve a relação entre branch e o respectivo ambiente:
-
-### Tabela Branch x Ambiente
-
-| Branch | Evento | Ambiente |
-| --- | --- | --- |
-| develop | Pull Request | Aplica no ambiente __DSV__ |
-| release/** | Pull Request | Aplica no ambiente __HMG__ |
-| pre-release/** | Pull Request | Aplica no ambiente __STG__ |
-| main | Pull | Aplica no ambiente __PRD__ |
-
 ## Execução Local Host
 
-__[descrição do processo de execução da aplicação localhost: ]__ No diretório raiz desse repositório, execute o comando abaixo num termina bash:
+__[descrição do processo de execução da aplicação localhost: ]__ No diretório /app desse repositório, execute o comando abaixo num termina bash:
 
 ``` sh
-mvn clean install &&
-mvn spring-boot:run
+mvn clean install
 ```
 
 > [!NOTE]
 > Para executar o comando acima citado, é necessário incluir no diretório **app/**, o arquivo .env, que fornecerá as variáveis de ambiente.
 > Procure o arquiteto do projeto e solicite o arquivo **.env**.
 
-Se a instalação ocorrer com sucesso, estará disponível no host: __http://localhost:8080__
+Se a instalação ocorrer com sucesso, estará disponível no host: "http://localhost:${CONFIG_SERVER_PORT_INT}"
 
 ## Execução docker compose
 
 __[descrição do processo de execução da aplicação localhost com docker compose: ]__ Para atender a necessidade de executar a os servidor em ambiente local, foi criado um manifesto compose que inicia as configurações iniciais dos servidores, proporcionando os recursos da arquitetura em ambiente **localhost.**
 
-Para executar essa instrução basta abrir o terminal na raiz desse diretóerio e executar com exemplo abaixo:
+Para executar essa instrução basta abrir o terminal no diretório /app e executar com exemplo abaixo:
 
 ```bash
-cd app && docker compose --env-file .env up -d --build --force-recreate
+docker compose --env-file .env up -d --build --force-recreate
 ```
 
 > [!NOTE]
 > Para executar o comando acima citado, é necessário incluir no diretório **app/**, o arquivo .env, que fornecerá ao docker compose as variáveis de ambiente.
 > Procure o arquiteto do projeto e solicite o arquivo **.env**.
+
+Se a instalação ocorrer com sucesso, estará disponível no host: "http://localhost:${CONFIG_SERVER_PORT_INT}"
 
 ## Licença
 

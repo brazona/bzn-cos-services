@@ -1,5 +1,4 @@
 {
-  "id": 5196821,
   "name": "branch_ruleset",
   "target": "branch",
   "source_type": "Repository",
@@ -7,12 +6,10 @@
   "conditions": {
     "ref_name": {
       "exclude": [
-        "refs/heads/feature/**",
-        "refs/heads/bugfix/**"
+        "refs/heads/feature/**/**",
+        "refs/heads/hotfix/**/**"
       ],
-      "include": [
-        "~ALL"
-      ]
+      "include": []
     }
   },
   "rules": [
@@ -21,6 +18,9 @@
     },
     {
       "type": "non_fast_forward"
+    },
+    {
+      "type": "update"
     },
     {
       "type": "pull_request",
@@ -39,7 +39,16 @@
       }
     },
     {
-      "type": "update"
+      "type": "code_scanning",
+      "parameters": {
+        "code_scanning_tools": [
+          {
+            "tool": "CodeQL",
+            "security_alerts_threshold": "high_or_higher",
+            "alerts_threshold": "errors"
+          }
+        ]
+      }
     }
   ],
   "bypass_actors": []

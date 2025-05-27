@@ -29,10 +29,9 @@ ENV CONFIG_SERVER_PORT_EXT=$ARG_CONFIG_SERVER_PORT_EXT
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
-
 # Copia o arquivo pom.xml e os arquivos de dependências para o diretório de trabalho
 COPY pom.xml ./
-COPY src ./app/src
+COPY src ./src
 
 # Compila a aplicação
 RUN mvn clean install
